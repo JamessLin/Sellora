@@ -1,10 +1,12 @@
 {
   "expo": {
     "scheme": "acme",
+    "plugins": ["expo-image-picker"],
     "web": {
       "bundler": "metro"
     },
     "name": "my-app",
     "slug": "my-app"
+
   }
 }
