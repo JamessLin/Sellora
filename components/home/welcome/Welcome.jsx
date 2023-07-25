@@ -8,7 +8,6 @@ import { db, auth } from '../../../firebase'
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const Welcome = () => {
   const router = useRouter();
 
@@ -48,7 +47,7 @@ const Welcome = () => {
         }}>
           <View style={styles.profile}>
             <Text style={styles.welcome} numberOfLines={1}>Håfa a'dai,</Text>
-            <Text style={{ fontSize: 22, fontFamily: 'Avenir-Book', fontWeight: 900, marginBottom:1, }} numberOfLines={1}> {username} 👋 </Text>
+            <Text style={{ fontSize: 25, fontFamily: 'Avenir-Book', fontWeight: 900, marginBottom:1, }} numberOfLines={1}> {username} 👋 </Text>
           </View>
           <Text style={styles.welcome2} >Connecting our island, one sale at a time!</Text>
 
@@ -56,7 +55,7 @@ const Welcome = () => {
 
 
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>router.push('/searchsc/SearchScreen')}>
         <View style={styles.searchContainer}>
           <View style={styles.searchWrapper}>
             <GoodICons name="ios-search-outline" size={24} color= {COLORS.gray2}/>

@@ -362,8 +362,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
 
-    width: 250,
-    height: 46,
+    width: 350,
+    height: 70,
+    marginLeft:10,
+  
   },
   authContainer: {
     flex: 1,

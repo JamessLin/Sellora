@@ -190,15 +190,15 @@ export default function Home() {
                         backgroundColor: COLORS.lightWhite,
 
                     },
+                    // headerLeft: () => (
+                    //     <TouchableOpacity style={{ backgroundColor: COLORS.lightWhite, width: 42, height: 42, borderRadius: 10, backgroundColor: COLORS.white, justifyContent: 'center', alignItems: 'center' }}>
+                    //         <Image source={icons.menu}
+                    //             resizeMode="cover"
+                    //             style={{ height: 23, width: 23 }}
+                    //         />
+                    //     </TouchableOpacity>
+                    // ),
                     headerLeft: () => (
-                        <TouchableOpacity style={{ backgroundColor: COLORS.lightWhite, width: 42, height: 42, borderRadius: 10, backgroundColor: COLORS.white, justifyContent: 'center', alignItems: 'center' }}>
-                            <Image source={icons.menu}
-                                resizeMode="cover"
-                                style={{ height: 23, width: 23 }}
-                            />
-                        </TouchableOpacity>
-                    ),
-                    headerRight: () => (
                         <TouchableOpacity style={{ width: 42, height: 42, borderRadius: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.white }} 
                         onPress={() => {
                             router.push('/SignOut') 

@@ -4,7 +4,28 @@ import { TouchableOpacity, View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import { Feather } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+
 const CustomInputToolbar = (props) => {
+    const pickImage = async () => {
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (permissionResult.granted === false) {
+            alert('Permission denied for accessing media library');
+            return;
+        }
+    
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            // allowsEditing: true,
+            aspect: [4, 3],
+            quality: 0.8,
+        });
+    
+        if (!result.canceled) {
+            const selectedImages = result.assets.map((asset) => asset.uri);
+            setImages((prevImages) => [...prevImages, ...selectedImages]);
+        }
+    };
     //   const renderSend = (sendProps) => {
     //     return (
     //       <Send {...sendProps}>
@@ -48,7 +69,7 @@ const CustomInputToolbar = (props) => {
                 )}
                 options={{
                     'Choose From Library': () => {
-                        console.log('Choose From Library');
+                        pickImage()
                     },
                     Cancel: () => {
                         console.log('Cancel');

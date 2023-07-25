@@ -191,7 +191,7 @@ const explore = () => {
 
 
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>{router.push('/searchsc/SearchScreen')}}>
         <View style={{
           paddingHorizontal: 20,
           justifyContent: "center",

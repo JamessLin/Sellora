@@ -38,7 +38,7 @@ const CardMain = ({ item, onPress, onOpen , postId }) => {
       }} style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Animated.View style={{ transform: [{ scale }] }}>
           <View style={{ backgroundColor: COLORS.theme1, borderRadius: 18, padding: 8, height: 63, width: 63, justifyContent: 'center', alignItems: 'center' }}>
-            <Ionicons name="ios-chatbubble-ellipses-outline" size={30} color="white" />
+            <Ionicons name="ios-chatbubbles-outline" size={30} color="white" />
           </View>
         </Animated.View>
       </TouchableOpacity>

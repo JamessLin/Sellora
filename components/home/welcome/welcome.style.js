@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 
   welcome: {
 
-    fontSize: 22, fontFamily: 'Avenir-Book'
+    fontSize: 24, fontFamily: 'Avenir-Book'
   },
   welcome2: {
     color: COLORS.gray, fontSize: 16,
