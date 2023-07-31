@@ -68,6 +68,9 @@ const CustomInputToolbar = (props) => {
                     <Feather name="image" size={26} color={COLORS.theme1} />
                 )}
                 options={{
+                    'Take From Camera': () => {
+                        pickImage()
+                    },
                     'Choose From Library': () => {
                         pickImage()
                     },

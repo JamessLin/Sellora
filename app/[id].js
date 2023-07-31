@@ -76,7 +76,7 @@ const ChatPage = () => {
         username: users,
         userId: receiverIds,
         chatstarter: senderIds,
-        avater: imae.profile,
+        avatar: imae.profile,
         participants: [senderIds, receiverIds],
         lastMessage: lastMessageText
       })
@@ -118,11 +118,10 @@ const ChatPage = () => {
       <GiftedChat
         messages={messages}
         onSend={messages => onSend(messages)}
-        user={{
+        user={
+          {
           _id: myID,
           name: users,
-          avatar: imae.profile,
-
         }}
         renderBubble={props => {
           return (

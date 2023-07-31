@@ -168,15 +168,22 @@ const explore = () => {
   };
 
   const snapPointsss = useMemo(() => ['25%', '50%'], []);
-
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const handleCardPresss = (item) => {
     console.log(item.id)
     setSelectedPostId(item.id)
     setsSelectedItem(item);
   };
 
-
-
+  const switchToNextImage = () => {
+    const nextIndex = (currentImageIndex + 1) % sselectedItem.images.length;
+    setCurrentImageIndex(nextIndex);
+  };
+  const switchToPreviousImage = () => {
+    const prevIndex =
+      (currentImageIndex - 1 + sselectedItem.images.length) % sselectedItem.images.length;
+    setCurrentImageIndex(prevIndex);
+  };
 
   return (
     <SafeAreaView style={[styles.container4, { backgroundColor: COLORS.lightWhite }]}>
@@ -191,7 +198,7 @@ const explore = () => {
 
 
 
-      <TouchableOpacity onPress={()=>{router.push('/searchsc/SearchScreen')}}>
+      <TouchableOpacity onPress={() => { router.push('/searchsc/SearchScreen') }}>
         <View style={{
           paddingHorizontal: 20,
           justifyContent: "center",
@@ -422,47 +429,72 @@ const explore = () => {
               <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
                 <Text style={{ fontSize: 18, fontFamily: 'Avenir-Medium', fontWeight: 500 }}>{sselectedItem.title}</Text>
               </View>
-              <View style={{ height: 300, }}>
+              <View style={{ height: 300, position: 'relative' }}>
                 {sselectedItem.images && sselectedItem.images.length > 0 && (
                   <>
                     <Image
-                      source={{ uri: sselectedItem.images[0] }}
+                      source={{ uri: sselectedItem.images[currentImageIndex] }}
                       style={{ width: '100%', height: '100%' }}
                       resizeMode="cover"
                     />
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        justifyContent: 'center',
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                      }}
+                      onPress={switchToPreviousImage}
+                    >
+                      <GoodICons name="arrow-back-circle-outline" size={26} color={COLORS.white} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        justifyContent: 'center',
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                      }}
+                      onPress={switchToNextImage}
+                    >
+                      <GoodICons name="arrow-forward-circle-outline" size={26} color={COLORS.white} />
+                    </TouchableOpacity>
                   </>
                 )}
               </View>
             </View>
             <View style={{ paddingHorizontal: 20, marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 20, fontFamily: 'Avenir-Medium', fontWeight: 400 }}>{sselectedItem.title}</Text>
-              <TouchableOpacity
-
-                onPress={handlePresentModalPress}
-              >
-                <GoodICons name="chatbubble-ellipses-outline" size={24} color="black" />
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ paddingHorizontal: 20, marginTop: 10, }}>
-              <Text style={{ fontSize: 23, fontFamily: 'Avenir-Medium', fontWeight: 700 }}>Description</Text>
+              <Text style={{ fontSize: 20, fontFamily: 'Avenir-Medium', fontWeight: 500 }}>Description</Text>
             </View>
             <View style={{ paddingHorizontal: 20 }}>
               <Text style={{ fontSize: 15, fontFamily: 'Avenir-Medium', fontWeight: 400 }} >{sselectedItem.description}</Text>
             </View>
 
-            <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', gap: 20, alignItems: 'center', }}>
-              <View>
-                <Text style={{ fontSize: 17, fontFamily: 'Avenir-Medium', fontWeight: 700 }}>Price</Text>
-                <Text style={{ fontSize: 15, fontFamily: 'Avenir-Medium', fontWeight: 400, color: COLORS.gray }}>$ {sselectedItem.pricing}</Text>
-              </View>
-              <View>
-                <Text style={{ fontSize: 17, fontFamily: 'Avenir-Medium', fontWeight: 700 }}>Category </Text>
-                <Text style={{ fontSize: 15, fontFamily: 'Avenir-Medium', fontWeight: 400, color: COLORS.gray }}>  {sselectedItem.selectedCategory}</Text>
-              </View>
-            </View>
+            <View style={{ flex: 1, paddingHorizontal: 20, paddingBottom: 10, justifyContent: 'flex-end', paddingTop: 20 }}>
+              <View style={{ paddingBottom: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <View style={{ flexDirection: 'row', gap: 20 }}>
+                  <View>
+                    <Text style={{ fontSize: 17, fontFamily: 'Avenir-Medium', fontWeight: 500 }}>Price</Text>
+                    <Text style={{ fontSize: 15, fontFamily: 'Avenir-Medium', fontWeight: 700, color: COLORS.gray }}>$ {sselectedItem.pricing}</Text>
+                  </View>
+                  <View>
+                    <Text style={{ fontSize: 17, fontFamily: 'Avenir-Medium', fontWeight: 500 }}>Category </Text>
+                    <Text style={{ fontSize: 15, fontFamily: 'Avenir-Medium', fontWeight: 700, color: COLORS.gray }}>  {sselectedItem.selectedCategory}</Text>
+                  </View>
+                </View>
+                <TouchableOpacity
 
-            <View style={{ flex: 1, paddingHorizontal: 20, paddingBottom: 10, justifyContent: 'flex-end', }}>
+                  onPress={handlePresentModalPress}
+                >
+                  <GoodICons name="chatbubble-ellipses-outline" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
               <View style={{ height: 1, backgroundColor: COLORS.border, width: "100%" }} />
               <View style={{ paddingVertical: 20, }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
@@ -532,8 +564,8 @@ const explore = () => {
           keyboardBlurBehavior="restore"
         >
 
-          <BottomSheetView style={{ paddingHorizontal:20, paddingBottom:20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 20 }}>
-            <Text style={{ fontWeight: 700, fontSize: 23 ,  }}>Comments</Text>
+          <BottomSheetView style={{ paddingHorizontal: 20, paddingBottom: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 20 }}>
+            <Text style={{ fontWeight: 700, fontSize: 23, }}>Comments</Text>
             <TouchableOpacity onPress={() => { bottomSheetModalRef.current?.close(); }}>
               <GoodICons name="ios-close-outline" size={30} color="black" />
             </TouchableOpacity>
@@ -561,49 +593,56 @@ const explore = () => {
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
                       <View style={{ width: '100%', paddingLeft: 20, marginBottom: 0, }}>
-       
-                      <TouchableOpacity
-          
-                        style={{
-                          width: '100%',
-                          height: 65,
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                       
-                          borderColor: '#f0f0f0',
-                        }}
-                      >
-                        <View
+
+                        <TouchableOpacity
+
                           style={{
+                            width: '100%',
                             height: 65,
-                            justifyContent: 'center',
-                            alignItems: 'flex-start',
-                            marginRight: 12,
-                            // paddingLeft: 10,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+
+                            borderColor: '#f0f0f0',
                           }}
                         >
-                          <Image source={imae.profile} style={{ width: 35, height: 35, borderRadius: 52 }} resizeMode="cover" />
-                        </View>
-              
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start', marginBottom: 4 }}>
-                          <View>
-                            <Text style={{ fontSize: 14, maxWidth: '100%', color: COLORS.main, fontWeight: 400, marginBottom: 4 , color: COLORS.gray }} numberOfLines={2}>
-                              {item.username} - {item.timestamp?.toDate().toLocaleString('en-US')}
-                            </Text>
-                            <Text style={{ fontSize: 18, maxWidth: '85%', marginRight: 4,}} >
-                              {item.text}
-                            </Text>
+                          <View
+                            style={{
+                              height: 65,
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              marginRight: 12,
+                              // paddingLeft: 10,
+                            }}
+                          >
+                            <Image source={imae.profile} style={{ width: 35, height: 35, borderRadius: 52 }} resizeMode="cover" />
                           </View>
-                        </View>
-                      </TouchableOpacity>      
-                    </View>
+
+                          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start', marginBottom: 4 }}>
+                            <View>
+                              <View style={{ flexDirection: 'row' }}>
+
+                                <Text style={{ fontWeight: 500, }} >
+                                  {item.username}
+                                </Text>
+                                <Text style={{ fontSize: 13, maxWidth: '100%', color: COLORS.main, fontWeight: 400, marginBottom: 4, color: COLORS.gray }} numberOfLines={2}>
+                                  - {item.timestamp?.toDate().toLocaleString('en-US')}
+                                </Text>
+                              </View>
+
+                              <Text style={{ fontSize: 16, maxWidth: '85%', marginRight: 4, }} >
+                                {item.text}
+                              </Text>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
                     )}
                   />
                 </View>
 
               )}
 
-              <View style={{ justifyContent: 'center', alignItems: 'flex-end', flexDirection: 'row', gap: 10, marginBottom:30 }}>
+              <View style={{ justifyContent: 'center', alignItems: 'flex-end', flexDirection: 'row', gap: 10, marginBottom: 30 }}>
 
                 <BottomSheetTextInput style={{
                   fontSize: 15,

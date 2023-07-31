@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useState, useMemo, useEffect } from 'react';
 import { View, SafeAreaView, Text, ScrollView, Platform, TouchableOpacity, Image, Modal, StyleSheet, TextInput } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useRouter, } from 'expo-router';
 import { Welcome, UserPost } from '../../../components';
 import { COLORS, icons, imae } from '../../../constants';
 import BottomSheet, {
@@ -16,13 +16,15 @@ import ActionButton from 'react-native-action-button-warnings-fixed';
 
 export default function Home() {
     const router = useRouter();
+    
     const [isOpen, setIsOpen] = useState(false);
+    const bottomSheetRef2 = useRef();
     const bottomSheetRef = useRef();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [images, setImages] = useState([]);
     const [pricing, setPricing] = useState('');
-
+    const [settingOpen, setSettingOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('');
     //this for bottomsheet modal fucken UPDATES 
     const bottomSheetModalRef = useRef();
@@ -31,7 +33,28 @@ export default function Home() {
     const handleClosePress = () => bottomSheetRef.current.close()
     const snapPoints = useMemo(() => ['100%'], []);
 
+    const snapPoints2 = useMemo(() => ['70%'], []);
 
+    const [username, setUsername] = useState('');
+
+    useEffect(() => {
+        const fetchUsername = async () => {
+            try {
+                const user = auth.currentUser;
+                if (user) {
+                    const userSnapshot = await db.collection('users').doc(user.uid).get();
+                    if (userSnapshot.exists) {
+                        const userData = userSnapshot.data();
+                        setUsername(userData.username);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching username:', error);
+            }
+        };
+
+        fetchUsername();
+    }, []);
     const categories = [
         { id: 'fashion', label: 'Fashion' },
         { id: 'sporting', label: 'Sporting' },
@@ -53,6 +76,9 @@ export default function Home() {
     }, [])
 
 
+    const handleSignOut = ()=>{
+        router.replace('/')
+    }
 
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present();
@@ -190,20 +216,21 @@ export default function Home() {
                         backgroundColor: COLORS.lightWhite,
 
                     },
-                    // headerLeft: () => (
-                    //     <TouchableOpacity style={{ backgroundColor: COLORS.lightWhite, width: 42, height: 42, borderRadius: 10, backgroundColor: COLORS.white, justifyContent: 'center', alignItems: 'center' }}>
-                    //         <Image source={icons.menu}
-                    //             resizeMode="cover"
-                    //             style={{ height: 23, width: 23 }}
-                    //         />
-                    //     </TouchableOpacity>
-                    // ),
                     headerLeft: () => (
-                        <TouchableOpacity style={{ width: 42, height: 42, borderRadius: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.white }} 
-                        onPress={() => {
-                            router.push('/SignOut') 
-                            // router.push('/ChatPage')
-                             }}>
+                        <TouchableOpacity style={{ backgroundColor: COLORS.lightWhite, width: 42, height: 42, borderRadius: 10, backgroundColor: COLORS.white, justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={icons.menu}
+                                resizeMode="cover"
+                                style={{ height: 23, width: 23 }}
+                            />
+                        </TouchableOpacity>
+                    ),
+                    headerRight: () => (
+                        <TouchableOpacity style={{ width: 42, height: 42, borderRadius: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.white }}
+                            onPress={() => {
+                                setSettingOpen(true)
+                                // router.push('/SignOut')
+                                // router.push('/ChatPage')
+                            }}>
                             <GoodICons name="ios-person-outline" size={24} color={COLORS.main} />
 
                         </TouchableOpacity>
@@ -395,12 +422,12 @@ export default function Home() {
                     </View>
 
                     {categories.map((category) => (
-                    
+
                         <View style={{
                             marginBottom: 10,
                             borderRadius: 10,
                             paddingHorizontal: 20,
-                        }}    key={category.id}>
+                        }} key={category.id}>
                             <TouchableOpacity
                                 key={category.id}
                                 onPress={() => handleCategorySelection(category.id)}
@@ -444,6 +471,87 @@ export default function Home() {
                     renderIcon={active => active ? (<GoodICons name="ios-add" size={30} color="white" />) : (<GoodICons name="ios-add" size={30} color="white" />)}
 
                 />)}
+
+            {settingOpen && (
+                <BottomSheet
+                    ref={bottomSheetRef2}
+                    enablePanDownToClose={true}
+                    snapPoints={snapPoints2}
+                    onClose={() => {
+                        bottomSheetRef2.current?.close();
+                        setSettingOpen(false);
+                    }}
+
+
+                    detached={true}
+                    initialSnap={0}
+                    bottomInset={100}
+
+                    style={{
+                        backgroundColor: 'transparent',
+                        marginHorizontal: 54,
+
+                        shadowColor: "#000",
+                        shadowOffset: {
+                            width: 0,
+                            height: 10,
+                        },
+                        shadowOpacity: 0.48,
+                        shadowRadius: 11.95,
+                        elevation: 18,
+                    }}
+                >
+                    <View>
+                        <View style={{
+                            alignItems: 'center',
+                            marginTop: 20,
+                        }}>
+                            <Image
+                                source={imae.profile}
+                                style={{
+                                    width: 100,
+                                    height: 100,
+                                    borderRadius: 50,
+                                    marginBottom: 10,
+                                    borderWidth: 3,
+                                    borderColor: '#fff',
+                                }}
+                                resizeMode="cover"
+                            />
+                            <Text style={{
+                                fontSize: 24,
+                                fontWeight: 'bold',
+                                color: '#333',
+                            }}>{username}</Text>
+                        </View>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
+                            <Text style={{ fontSize: 17, fontFamily: 'Avenir-Medium', fontWeight: 400 }}>{auth.currentUser && auth.currentUser.email}</Text>
+                        </View>
+
+                    </View>
+                    <View style={{ flex: 1, justifyContent: 'flex-end', paddingHorizontal: 20, marginBottom: 20, }}>
+                        <TouchableOpacity
+                            style={{
+                                paddingVertical: 13,
+                                paddingHorizontal: 16,
+                                borderRadius: 12,
+                                height: 50,
+
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderWidth: 1,
+                                borderColor: COLORS.border,
+                                flexDirection: 'row',
+                                gap: 10,
+                            }}
+                            onPress={handleSignOut}
+                        >
+                            <Text style={{ color: '#EE4B2B', fontWeight: 'bold', fontSize: 16, }}>Log Out</Text>
+                            <GoodICons name="ios-exit-outline" size={24} color="#EE4B2B" />
+                        </TouchableOpacity>
+                    </View>
+                </BottomSheet>
+            )}
 
         </SafeAreaView>
     )
