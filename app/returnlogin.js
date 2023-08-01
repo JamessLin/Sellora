@@ -11,7 +11,7 @@ import { MotiView, useAnimationState } from "moti";
 import { Shadow } from "react-native-shadow-2"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const index = () => {
+const returnlogin = () => {
   const router = useRouter();
 
   const [mode, setMode] = useState("login")
@@ -350,7 +350,7 @@ const index = () => {
   )
 }
 
-export default index 
+export default returnlogin 
 
 const styles = StyleSheet.create({
   container: {

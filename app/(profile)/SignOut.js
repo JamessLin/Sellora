@@ -16,7 +16,7 @@ const ProfilePage = () => {
         setUser(user);
       } else {
         setIsLoggedIn(false);
-        router.replace('/');
+        router.replace('/index');
       }
     });
 

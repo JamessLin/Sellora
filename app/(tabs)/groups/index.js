@@ -109,7 +109,7 @@ const ChatSection = () => {
             if (currentUserId === item.userId) {
 
               router.push({
-                pathname: `/${username}`,
+                pathname: `chat/${username}`,
                 params: {
                   senderIds: item.chatstarter, receiverIds: item.userId, users: username, myID: currentUserId
                 }
@@ -117,7 +117,7 @@ const ChatSection = () => {
             } else {
 
               router.push({
-                pathname: `/${item.username}`,
+                pathname: `chat/${item.username}`,
                 params: {
                   senderIds: item.chatstarter, receiverIds: item.userId, users: item.username, myID: currentUserId
                 }

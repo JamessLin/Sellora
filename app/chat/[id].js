@@ -2,14 +2,14 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button } from 'rea
 
 import React, { useState, useEffect, useCallback } from 'react'
 import { GiftedChat, Bubble, InputToolbar, Send } from 'react-native-gifted-chat'
-import { COLORS, imae } from '../constants'
-import { db, auth } from '../firebase'
+import { COLORS, imae } from '../../constants'
+import { db, auth } from '../../firebase'
 import { useRouter, useLocalSearchParams, Stack } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context'
-import CustomInputToolbar from '../components/custominput';
+import CustomInputToolbar from '../../components/custominput';
 
 
 
@@ -65,7 +65,7 @@ const ChatPage = () => {
     }
 
 
-  
+
     setMessages(previousMessages => GiftedChat.append(previousMessages, myMsg));
 
 
@@ -120,13 +120,15 @@ const ChatPage = () => {
         onSend={messages => onSend(messages)}
         user={
           {
-          _id: myID,
-          name: users,
-        }}
+            _id: myID,
+            name: users,
+            avatar: imae.profile
+
+          }}
         renderBubble={props => {
           return (
             <Bubble {...props} wrapperStyle={{
-            
+
               right: {
                 backgroundColor: COLORS.theme1
               },
@@ -134,9 +136,9 @@ const ChatPage = () => {
             }} />
           )
         }}
-        renderInputToolbar={props =>  <CustomInputToolbar {...props} />}
+        renderInputToolbar={props => <CustomInputToolbar {...props} />}
 
-     
+
 
       />
     </View >

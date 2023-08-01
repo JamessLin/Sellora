@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet, ScrollView, RefreshControl, Image, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet, ScrollView, RefreshControl, Image, KeyboardAvoidingView , TextInput } from 'react-native';
 import { db, auth } from '../../../firebase';
 import GoodICons from '@expo/vector-icons/Ionicons'
 import { Swipeable } from 'react-native-gesture-handler';
@@ -391,7 +391,7 @@ const explore = () => {
                   onPress={() => {
                     if (auth.currentUser.uid != selectedItem.userId) {
                       router.push({
-                        pathname: `/${selectedItem.username}`, params: {
+                        pathname: `chat/${selectedItem.username}`, params: {
                           senderIds: auth.currentUser.uid, receiverIds: selectedItem.userId, users: selectedItem.username, myID: currentUserId
                         }
                       })
@@ -536,7 +536,7 @@ const explore = () => {
                 onPress={() => {
                   if (auth.currentUser.uid != sselectedItem.userId) {
                     router.push({
-                      pathname: `/${sselectedItem.username}`, params: {
+                      pathname: `chat/${sselectedItem.username}`, params: {
                         senderIds: auth.currentUser.uid, receiverIds: sselectedItem.userId, users: sselectedItem.username, myID: currentUserId
                       }
                     })
@@ -561,7 +561,7 @@ const explore = () => {
           enablePanDownToClose={true}
           handleIndicatorStyle={{ display: "none" }}
 
-          keyboardBlurBehavior="restore"
+
         >
 
           <BottomSheetView style={{ paddingHorizontal: 20, paddingBottom: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 20 }}>
@@ -579,7 +579,7 @@ const explore = () => {
             <>
               {comments.length === 0 ? (
 
-                <View style={{ height: '84%', }}>
+                <View style={{ height: '83%' }}>
                   <Text style={{ fontWeight: 600, fontSize: 16, color: COLORS.border }}>
                     no comments
                   </Text>
@@ -587,7 +587,8 @@ const explore = () => {
                 </View>
 
               ) : (
-                <View style={{ height: '84%', }}>
+                <View style={{ height: '83%' }}>
+
                   <FlatList
                     data={comments}
                     keyExtractor={(item) => item.id.toString()}
@@ -640,37 +641,37 @@ const explore = () => {
                   />
                 </View>
 
-              )}
+              )}  
+              <BottomSheetView style={{  justifyContent: 'flex-end', }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, }}>
+                  <BottomSheetTextInput style={{
+                    fontSize: 15,
+                    paddingVertical: 13,
+                    paddingHorizontal: 13,
+                    borderRadius: 12,
+                    height: 50,
+                    width: 320,
+                    textAlign: 'left',
+                    borderWidth: 1,
+                    borderColor: COLORS.border,
+                  }}
+                    value={commentText}
+                    onChangeText={(text) => setCommentText(text)}
+                    placeholder='Write something!'
+                    placeholderTextColor={COLORS.gray}
 
-              <View style={{ justifyContent: 'center', alignItems: 'flex-end', flexDirection: 'row', gap: 10, marginBottom: 30 }}>
+                  />
 
-                <BottomSheetTextInput style={{
-                  fontSize: 15,
-                  paddingVertical: 13,
-                  paddingHorizontal: 13,
-                  borderRadius: 12,
-                  height: 50,
-                  width: 300,
-                  textAlign: 'left',
-                  borderWidth: 1,
-                  borderColor: COLORS.border,
-                }}
-                  value={commentText}
-                  onChangeText={(text) => setCommentText(text)}
-                  placeholder='Write something!'
-                  placeholderTextColor={COLORS.gray}
+                  <TouchableOpacity
+                    onPress={handleCommentSubmit}
+                  >
+                    <Text style={{ color: COLORS.theme1, fontSize: 18, fontWeight: 600, }}>Send</Text>
 
-                />
+                  </TouchableOpacity>
+                </View>
+              </BottomSheetView>
 
-                <TouchableOpacity
-                  onPress={handleCommentSubmit}
-                  style={{ marginBottom: 15, }}
-                >
-                  <Text style={{ color: COLORS.theme1, fontSize: 18, fontWeight: 600, }}>Send</Text>
 
-                </TouchableOpacity>
-
-              </View>
 
             </>
           )}

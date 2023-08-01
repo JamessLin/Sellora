@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useState, useMemo, useEffect } from 'react';
 import { View, SafeAreaView, Text, ScrollView, Platform, TouchableOpacity, Image, Modal, StyleSheet, TextInput } from 'react-native';
-import { Stack, useRouter, } from 'expo-router';
+import { Stack, useRouter, Redirect } from 'expo-router';
 import { Welcome, UserPost } from '../../../components';
 import { COLORS, icons, imae } from '../../../constants';
 import BottomSheet, {
@@ -13,10 +13,11 @@ import { serverTimestamp } from 'firebase/firestore';
 import GoodICons from '@expo/vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker';
 import ActionButton from 'react-native-action-button-warnings-fixed';
+import { Feather } from '@expo/vector-icons';
 
 export default function Home() {
     const router = useRouter();
-    
+
     const [isOpen, setIsOpen] = useState(false);
     const bottomSheetRef2 = useRef();
     const bottomSheetRef = useRef();
@@ -76,9 +77,34 @@ export default function Home() {
     }, [])
 
 
-    const handleSignOut = ()=>{
-        router.replace('/')
-    }
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                setIsLoggedIn(true);
+                setUser(user);
+            } else {
+                setIsLoggedIn(false);
+                router.replace('/returnlogin');
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    const handleSignOut = () => {
+        auth
+            .signOut()
+            .then(() => {
+                console.log('User signed out successfully.');
+            })
+            .catch((error) => {
+                console.error('Error while signing out:', error);
+            });
+    };
+
 
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present();
@@ -216,14 +242,14 @@ export default function Home() {
                         backgroundColor: COLORS.lightWhite,
 
                     },
-                    headerLeft: () => (
-                        <TouchableOpacity style={{ backgroundColor: COLORS.lightWhite, width: 42, height: 42, borderRadius: 10, backgroundColor: COLORS.white, justifyContent: 'center', alignItems: 'center' }}>
-                            <Image source={icons.menu}
-                                resizeMode="cover"
-                                style={{ height: 23, width: 23 }}
-                            />
-                        </TouchableOpacity>
-                    ),
+                    // headerLeft: () => (
+                    //     <TouchableOpacity style={{ backgroundColor: COLORS.lightWhite, width: 42, height: 42, borderRadius: 10, backgroundColor: COLORS.white, justifyContent: 'center', alignItems: 'center' }}>
+                    //         <Image source={icons.menu}
+                    //             resizeMode="cover"
+                    //             style={{ height: 23, width: 23 }}
+                    //         />
+                    //     </TouchableOpacity>
+                    // ),
                     headerRight: () => (
                         <TouchableOpacity style={{ width: 42, height: 42, borderRadius: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.white }}
                             onPress={() => {
@@ -485,7 +511,7 @@ export default function Home() {
 
                     detached={true}
                     initialSnap={0}
-                    bottomInset={100}
+                    bottomInset={150}
 
                     style={{
                         backgroundColor: 'transparent',
@@ -504,32 +530,56 @@ export default function Home() {
                     <View>
                         <View style={{
                             alignItems: 'center',
-                            marginTop: 20,
+                            marginTop: 10,
                         }}>
-                            <Image
-                                source={imae.profile}
-                                style={{
-                                    width: 100,
-                                    height: 100,
-                                    borderRadius: 50,
-                                    marginBottom: 10,
-                                    borderWidth: 3,
-                                    borderColor: '#fff',
-                                }}
-                                resizeMode="cover"
-                            />
+                            <TouchableOpacity onPress={pickImage}>
+                                <Image
+                                    source={imae.profile}
+                                    style={{
+                                        width: 150,
+                                        height: 150,
+                                        borderRadius: 150,
+                                        marginBottom: 10,
+                                        borderWidth: 3,
+                                        borderColor: '#fff',
+                                    }}
+                                    resizeMode="cover"
+                                />
+                            </TouchableOpacity>
                             <Text style={{
                                 fontSize: 24,
                                 fontWeight: 'bold',
                                 color: '#333',
                             }}>{username}</Text>
+
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
-                            <Text style={{ fontSize: 17, fontFamily: 'Avenir-Medium', fontWeight: 400 }}>{auth.currentUser && auth.currentUser.email}</Text>
+                            <Text style={{ fontSize: 16, fontFamily: 'Avenir-Medium', fontWeight: 400 }}>{auth.currentUser && auth.currentUser.email}</Text>
                         </View>
 
                     </View>
+
                     <View style={{ flex: 1, justifyContent: 'flex-end', paddingHorizontal: 20, marginBottom: 20, }}>
+                        <TouchableOpacity
+                            style={{
+                                paddingVertical: 13,
+                                paddingHorizontal: 16,
+                                borderRadius: 12,
+                                height: 50,
+
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderWidth: 1,
+                                borderColor: COLORS.border,
+                                flexDirection: 'row',
+                                gap: 10,
+                                marginBottom: 10,
+                            }}
+                            onPress={() => { router.push('/SignOut') }}
+                        >
+                            <Text style={{ color: COLORS.main, fontWeight: 'bold', fontSize: 16, }}>Edit Profile</Text>
+                            <Feather name="edit-3" size={20} color="black" />
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={{
                                 paddingVertical: 13,
@@ -547,7 +597,7 @@ export default function Home() {
                             onPress={handleSignOut}
                         >
                             <Text style={{ color: '#EE4B2B', fontWeight: 'bold', fontSize: 16, }}>Log Out</Text>
-                            <GoodICons name="ios-exit-outline" size={24} color="#EE4B2B" />
+                            <Feather name="log-out" size={20} color="#EE4B2B" />
                         </TouchableOpacity>
                     </View>
                 </BottomSheet>

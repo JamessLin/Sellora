@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { View, TextInput, Button, FlatList, Text, TouchableOpacity, Image } from 'react-native';
+import { View, TextInput, Button, FlatList, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { db, auth } from '../../firebase'
 import CardMain from '../../components/common/createCard/cardshow';
@@ -11,8 +11,6 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet'
 import GoodICons from '@expo/vector-icons/Ionicons'
 import { ActivityIndicator } from 'react-native-paper';
-
-
 
 const SearchScreen = () => {
     const router = useRouter()
@@ -29,6 +27,18 @@ const SearchScreen = () => {
     const [selectedPostId, setSelectedPostId] = useState(null);
     const commentsRef = db.collection('comments');
     const inputRef = useRef(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+
+    const switchToNextImage = () => {
+        const nextIndex = (currentImageIndex + 1) % sselectedItem.images.length;
+        setCurrentImageIndex(nextIndex);
+    };
+    const switchToPreviousImage = () => {
+        const prevIndex =
+            (currentImageIndex - 1 + sselectedItem.images.length) % sselectedItem.images.length;
+        setCurrentImageIndex(prevIndex);
+    };
 
     const searchPostsByTitle = async (searchQuery) => {
         try {
@@ -40,7 +50,9 @@ const SearchScreen = () => {
 
             const searchResults = [];
             querySnapshot.forEach((doc) => {
-                searchResults.push(doc.data());
+                const data = doc.data();
+                data.id = doc.id;
+                searchResults.push(data);
             });
 
             console.log(searchResults);
@@ -50,9 +62,12 @@ const SearchScreen = () => {
             return [];
         }
     };
+
+
     useEffect(() => {
         inputRef.current.focus();
     }, []);
+
     const handleSearch = async () => {
         if (searchQuery.trim() === '') {
             setSearchResults([]);
@@ -77,6 +92,7 @@ const SearchScreen = () => {
         setSelectedItem(item);
 
     };
+
     useEffect(() => {
         const fetchComments = async (selectedPostId) => {
             try {
@@ -207,10 +223,11 @@ const SearchScreen = () => {
             ) : (
                 <FlatList
                     data={searchResults}
+                    keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
                         <CardMain item={item} onPress={() => handleCardPress(item)} onOpen={() => handleCardPresss(item)} />
                     )}
-                    keyExtractor={(item) => item.timestamp}
+
                 />
             )}
 
@@ -309,7 +326,7 @@ const SearchScreen = () => {
                                     onPress={() => {
                                         if (auth.currentUser.uid != selectedItem.userId) {
                                             router.push({
-                                                pathname: `/${selectedItem.username}`, params: {
+                                                pathname: `chat/${selectedItem.username}`, params: {
                                                     senderIds: auth.currentUser.uid, receiverIds: selectedItem.userId, users: selectedItem.username, myID: currentUserId
                                                 }
                                             })
@@ -333,13 +350,13 @@ const SearchScreen = () => {
                     <BottomSheet
                         ref={bottomSheetRef}
                         enablePanDownToClose={true}
-                        snapPoints={['93%']}
+                        snapPoints={['95%']}
                         onClose={() => {
                             bottomSheetRef.current?.close();
                             setsSelectedItem(false);
                         }}
 
-                        containerStyle={{ backgroundColor: COLORS.transparentBlack3 }}
+
                         initialSnap={0}
 
                     >
@@ -347,47 +364,72 @@ const SearchScreen = () => {
                             <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
                                 <Text style={{ fontSize: 18, fontFamily: 'Avenir-Medium', fontWeight: 500 }}>{sselectedItem.title}</Text>
                             </View>
-                            <View style={{ height: 300, }}>
+                            <View style={{ height: 300, position: 'relative' }}>
                                 {sselectedItem.images && sselectedItem.images.length > 0 && (
                                     <>
                                         <Image
-                                            source={{ uri: sselectedItem.images[0] }}
+                                            source={{ uri: sselectedItem.images[currentImageIndex] }}
                                             style={{ width: '100%', height: '100%' }}
                                             resizeMode="cover"
                                         />
+                                        <TouchableOpacity
+                                            style={{
+                                                position: 'absolute',
+                                                left: 0,
+                                                top: 0,
+                                                bottom: 0,
+                                                justifyContent: 'center',
+                                                paddingLeft: 10,
+                                                paddingRight: 10,
+                                            }}
+                                            onPress={switchToPreviousImage}
+                                        >
+                                            <GoodICons name="arrow-back-circle-outline" size={26} color={COLORS.white} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={{
+                                                position: 'absolute',
+                                                right: 0,
+                                                top: 0,
+                                                bottom: 0,
+                                                justifyContent: 'center',
+                                                paddingLeft: 10,
+                                                paddingRight: 10,
+                                            }}
+                                            onPress={switchToNextImage}
+                                        >
+                                            <GoodICons name="arrow-forward-circle-outline" size={26} color={COLORS.white} />
+                                        </TouchableOpacity>
                                     </>
                                 )}
                             </View>
                         </View>
                         <View style={{ paddingHorizontal: 20, marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{ fontSize: 20, fontFamily: 'Avenir-Medium', fontWeight: 400 }}>{sselectedItem.title}</Text>
-                            <TouchableOpacity
-
-                                onPress={handlePresentModalPress}
-                            >
-                                <GoodICons name="chatbubble-ellipses-outline" size={24} color="black" />
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={{ paddingHorizontal: 20, marginTop: 10, }}>
-                            <Text style={{ fontSize: 23, fontFamily: 'Avenir-Medium', fontWeight: 700 }}>Description</Text>
+                            <Text style={{ fontSize: 20, fontFamily: 'Avenir-Medium', fontWeight: 500 }}>Description</Text>
                         </View>
                         <View style={{ paddingHorizontal: 20 }}>
                             <Text style={{ fontSize: 15, fontFamily: 'Avenir-Medium', fontWeight: 400 }} >{sselectedItem.description}</Text>
                         </View>
 
-                        <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', gap: 20, alignItems: 'center', }}>
-                            <View>
-                                <Text style={{ fontSize: 17, fontFamily: 'Avenir-Medium', fontWeight: 700 }}>Price</Text>
-                                <Text style={{ fontSize: 15, fontFamily: 'Avenir-Medium', fontWeight: 400, color: COLORS.gray }}>$ {sselectedItem.pricing}</Text>
-                            </View>
-                            <View>
-                                <Text style={{ fontSize: 17, fontFamily: 'Avenir-Medium', fontWeight: 700 }}>Category </Text>
-                                <Text style={{ fontSize: 15, fontFamily: 'Avenir-Medium', fontWeight: 400, color: COLORS.gray }}>  {sselectedItem.selectedCategory}</Text>
-                            </View>
-                        </View>
+                        <View style={{ flex: 1, paddingHorizontal: 20, paddingBottom: 10, justifyContent: 'flex-end', paddingTop: 20 }}>
+                            <View style={{ paddingBottom: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <View style={{ flexDirection: 'row', gap: 20 }}>
+                                    <View>
+                                        <Text style={{ fontSize: 17, fontFamily: 'Avenir-Medium', fontWeight: 500 }}>Price</Text>
+                                        <Text style={{ fontSize: 15, fontFamily: 'Avenir-Medium', fontWeight: 700, color: COLORS.gray }}>$ {sselectedItem.pricing}</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={{ fontSize: 17, fontFamily: 'Avenir-Medium', fontWeight: 500 }}>Category </Text>
+                                        <Text style={{ fontSize: 15, fontFamily: 'Avenir-Medium', fontWeight: 700, color: COLORS.gray }}>  {sselectedItem.selectedCategory}</Text>
+                                    </View>
+                                </View>
+                                <TouchableOpacity
 
-                        <View style={{ flex: 1, paddingHorizontal: 20, paddingBottom: 10, justifyContent: 'flex-end', }}>
+                                    onPress={handlePresentModalPress}
+                                >
+                                    <GoodICons name="chatbubble-ellipses-outline" size={24} color="black" />
+                                </TouchableOpacity>
+                            </View>
                             <View style={{ height: 1, backgroundColor: COLORS.border, width: "100%" }} />
                             <View style={{ paddingVertical: 20, }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
@@ -424,12 +466,13 @@ const SearchScreen = () => {
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     flexDirection: 'row',
+                                    marginBottom: 20,
                                     gap: 5,
                                 }}
                                 onPress={() => {
                                     if (auth.currentUser.uid != sselectedItem.userId) {
                                         router.push({
-                                            pathname: `/${sselectedItem.username}`, params: {
+                                            pathname: `chat/${sselectedItem.username}`, params: {
                                                 senderIds: auth.currentUser.uid, receiverIds: sselectedItem.userId, users: sselectedItem.username, myID: currentUserId
                                             }
                                         })
@@ -447,9 +490,10 @@ const SearchScreen = () => {
 
                 )}
 
+
                 <BottomSheetModal
                     ref={bottomSheetModalRef}
-                    snapPoints={["100%"]}
+                    snapPoints={["93%"]}
                     containerStyle={{ backgroundColor: COLORS.transparentBlack3 }}
                     enablePanDownToClose={true}
                     handleIndicatorStyle={{ display: "none" }}
@@ -472,7 +516,7 @@ const SearchScreen = () => {
                         <>
                             {comments.length === 0 ? (
 
-                                <View style={{ height: '84%', }}>
+                                <View style={{ flex: 1 }}>
                                     <Text style={{ fontWeight: 600, fontSize: 16, color: COLORS.border }}>
                                         no comments
                                     </Text>
@@ -480,7 +524,7 @@ const SearchScreen = () => {
                                 </View>
 
                             ) : (
-                                <View style={{ height: '84%', }}>
+                                <View style={{ flex: 1 }}>
                                     <FlatList
                                         data={comments}
                                         keyExtractor={(item) => item.id.toString()}
@@ -512,10 +556,17 @@ const SearchScreen = () => {
 
                                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start', marginBottom: 4 }}>
                                                         <View>
-                                                            <Text style={{ fontSize: 14, maxWidth: '100%', color: COLORS.main, fontWeight: 400, marginBottom: 4, color: COLORS.gray }} numberOfLines={2}>
-                                                                {item.username} - {item.timestamp?.toDate().toLocaleString('en-US')}
-                                                            </Text>
-                                                            <Text style={{ fontSize: 18, maxWidth: '85%', marginRight: 4, }} >
+                                                            <View style={{ flexDirection: 'row' }}>
+
+                                                                <Text style={{ fontWeight: 500, }} >
+                                                                    {item.username}
+                                                                </Text>
+                                                                <Text style={{ fontSize: 13, maxWidth: '100%', color: COLORS.main, fontWeight: 400, marginBottom: 4, color: COLORS.gray }} numberOfLines={2}>
+                                                                    - {item.timestamp?.toDate().toLocaleString('en-US')}
+                                                                </Text>
+                                                            </View>
+
+                                                            <Text style={{ fontSize: 16, maxWidth: '85%', marginRight: 4, }} >
                                                                 {item.text}
                                                             </Text>
                                                         </View>
@@ -524,39 +575,40 @@ const SearchScreen = () => {
                                             </View>
                                         )}
                                     />
+                                    <View style={{ flex: 1, justifyContent: 'flex-end', paddingBottom: 30, }}>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, }}>
+                                            <BottomSheetTextInput style={{
+                                                fontSize: 15,
+                                                paddingVertical: 13,
+                                                paddingHorizontal: 13,
+                                                borderRadius: 12,
+                                                height: 50,
+                                                width: 320,
+                                                textAlign: 'left',
+                                                borderWidth: 1,
+                                                borderColor: COLORS.border,
+                                            }}
+                                                value={commentText}
+                                                onChangeText={(text) => setCommentText(text)}
+                                                placeholder='Write something!'
+                                                placeholderTextColor={COLORS.gray}
+
+                                            />
+
+                                            <TouchableOpacity
+                                                onPress={handleCommentSubmit}
+                                            >
+                                                <Text style={{ color: COLORS.theme1, fontSize: 18, fontWeight: 600, }}>Send</Text>
+
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+
                                 </View>
 
                             )}
 
-                            <View style={{ justifyContent: 'center', alignItems: 'flex-end', flexDirection: 'row', gap: 10, marginBottom: 30 }}>
 
-                                <BottomSheetTextInput style={{
-                                    fontSize: 15,
-                                    paddingVertical: 13,
-                                    paddingHorizontal: 13,
-                                    borderRadius: 12,
-                                    height: 50,
-                                    width: 300,
-                                    textAlign: 'left',
-                                    borderWidth: 1,
-                                    borderColor: COLORS.border,
-                                }}
-                                    value={commentText}
-                                    onChangeText={(text) => setCommentText(text)}
-                                    placeholder='Write something!'
-                                    placeholderTextColor={COLORS.gray}
-
-                                />
-
-                                <TouchableOpacity
-                                    onPress={handleCommentSubmit}
-                                    style={{ marginBottom: 15, }}
-                                >
-                                    <Text style={{ color: COLORS.theme1, fontSize: 18, fontWeight: 600, }}>Send</Text>
-
-                                </TouchableOpacity>
-
-                            </View>
 
                         </>
                     )}

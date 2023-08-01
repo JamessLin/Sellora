@@ -25,7 +25,7 @@ const CardMain = ({ item, onPress, onOpen , postId }) => {
       
         if (auth.currentUser.uid != item.userId) {
           router.push({
-            pathname: `/${item.username}`, params: {
+            pathname: `chat/${item.username}`, params: {
               senderIds: auth.currentUser.uid, receiverIds: item.userId, users: item.username,  myID: currentUserId
             }
           })
