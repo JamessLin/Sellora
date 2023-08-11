@@ -100,7 +100,13 @@ const ChatPage = () => {
 
 
   return (
-    <View style={{ flex: 1, paddingVertical: 20, backgroundColor: COLORS.lightWhite }}>
+    <View
+      style={{
+        flex: 1,
+        paddingVertical: 20,
+        backgroundColor: COLORS.lightWhite,
+      }}
+    >
       <Stack.Screen
         options={{
           title: users,
@@ -108,42 +114,35 @@ const ChatPage = () => {
             fontSize: 18,
           },
           headerStyle: {
-            backgroundColor: COLORS.lightWhite
+            backgroundColor: COLORS.lightWhite,
           },
-
         }}
-
       />
 
       <GiftedChat
         messages={messages}
-        onSend={messages => onSend(messages)}
-        user={
-          {
-            _id: myID,
-            name: users,
-            avatar: imae.profile
-
-          }}
-        renderBubble={props => {
-          return (
-            <Bubble {...props} wrapperStyle={{
-
-              right: {
-                backgroundColor: COLORS.theme1
-              },
-
-            }} />
-          )
+        onSend={(messages) => onSend(messages)}
+        user={{
+          _id: myID,
+          name: users,
+          avatar: imae.profile,
         }}
-        renderInputToolbar={props => <CustomInputToolbar {...props} />}
-
-
-
+        renderBubble={(props) => {
+          return (
+            <Bubble
+              {...props}
+              wrapperStyle={{
+                right: {
+                  backgroundColor: COLORS.theme1,
+                },
+              }}
+            />
+          );
+        }}
+        renderInputToolbar={(props) => <CustomInputToolbar {...props} />}
       />
-    </View >
-
-  )
+    </View>
+  );
 
 }
 

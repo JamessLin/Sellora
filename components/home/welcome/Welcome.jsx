@@ -47,7 +47,7 @@ const Welcome = () => {
         }}>
           <View style={styles.profile}>
             <Text style={styles.welcome} numberOfLines={1}>Håfa a'dai,</Text>
-            <Text style={{ fontSize: 25, fontFamily: 'Avenir-Book', fontWeight: 900, marginBottom:1, }} numberOfLines={1}> {username} 👋 </Text>
+            <Text style={{ fontSize: 25, fontFamily: 'Avenir-Book', fontWeight: 900, marginBottom:1, }} numberOfLines={1}> @{username} 👋 </Text>
           </View>
           <Text style={styles.welcome2} >Connecting our island, one sale at a time!</Text>
 

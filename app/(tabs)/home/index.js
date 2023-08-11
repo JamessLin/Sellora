@@ -56,6 +56,7 @@ export default function Home() {
 
         fetchUsername();
     }, []);
+    
     const categories = [
         { id: 'fashion', label: 'Fashion' },
         { id: 'sporting', label: 'Sporting' },
@@ -550,7 +551,7 @@ export default function Home() {
                                 fontSize: 24,
                                 fontWeight: 'bold',
                                 color: '#333',
-                            }}>{username}</Text>
+                            }}>@{username}</Text>
 
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
@@ -575,7 +576,7 @@ export default function Home() {
                                 gap: 10,
                                 marginBottom: 10,
                             }}
-                            onPress={() => { router.push('/SignOut') }}
+                            onPress={() => { router.push("/Profile"); }}
                         >
                             <Text style={{ color: COLORS.main, fontWeight: 'bold', fontSize: 16, }}>Edit Profile</Text>
                             <Feather name="edit-3" size={20} color="black" />

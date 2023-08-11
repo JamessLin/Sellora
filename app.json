@@ -1,12 +1,29 @@
 {
   "expo": {
     "scheme": "acme",
-    "plugins": ["expo-image-picker"],
+    "plugins": [
+      "expo-image-picker"
+    ],
     "web": {
       "bundler": "metro"
     },
-    "name": "my-app",
-    "slug": "my-app"
-
+    "name": "Sellora",
+    "slug": "Sellora",
+    "extra": {
+      "eas": {
+        "projectId": "4da5c306-f413-47d8-b954-a242fdf00982"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.spyxles.Sellora"
+    },
+    "android": {
+      "package": "com.spyxles.Sellora"
+    }
+  },
+  "icon": "assets/images/icon.png",
+  "splash": {
+    "image": "assets/images/splash.png",
+    "resizeMode": "contain"
   }
 }
