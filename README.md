@@ -1,2 +1,1 @@
-# 4th year Congressional App Challenge. 
-Ending with a .
+this app was made for cac but i didn't submit
