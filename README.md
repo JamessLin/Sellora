@@ -2,8 +2,8 @@ Sellora is the ultimate app designed to streamline buying and selling on small i
 
 Features:
 
-Create Your Account: Sign up quickly and start browsing or selling in no time.
-Post Your Items: List your items for sale with detailed descriptions and photos to attract potential buyers.
-Search and Filter: Effortlessly find what you're looking for with powerful search and filter options.
-Connect with Sellers: Message sellers directly to inquire about items or negotiate deals.
-Built with React Native and powered by Firebase
+- Create Your Account: Sign up quickly and start browsing or selling in no time.
+- Post Your Items: List your items for sale with detailed descriptions and photos to attract potential buyers.
+- Search and Filter: Effortlessly find what you're looking for with powerful search and filter options.
+- Connect with Sellers: Message sellers directly to inquire about items or negotiate deals.
+- Built with React Native and powered by Firebase
