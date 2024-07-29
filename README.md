@@ -1,6 +1,6 @@
-Sellora is the ultimate app designed to streamline buying and selling on small islands where traditional online purchases can take a long time to arrive. With Sellora, you can easily connect with your local community and access a marketplace that's fast, efficient, and tailored to your needs.
+**Sellora **is the ultimate app designed to streamline buying and selling on small islands where traditional online purchases can take a long time to arrive. With Sellora, you can easily connect with your local community and access a marketplace that's fast, efficient, and tailored to your needs.
 
-Features:
+**Features:**
 
 - Create Your Account: Sign up quickly and start browsing or selling in no time.
 - Post Your Items: List your items for sale with detailed descriptions and photos to attract potential buyers.
