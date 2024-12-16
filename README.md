@@ -2,7 +2,7 @@
 
 
 
-**SELLORA**
+**Purpose**
 
 Sellora is the ultimate app designed to streamline buying and selling on small islands where traditional online purchases can take a long time to arrive. With Sellora, you can easily connect with your local community and access a marketplace that's fast, efficient, and tailored to your needs.
 
