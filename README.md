@@ -4,12 +4,8 @@
 ![image](https://github.com/user-attachments/assets/2d8c58f4-81de-40c7-a3a8-ef9bb388dee3)
 ![image](https://github.com/user-attachments/assets/265b2be4-eb9b-42e7-873a-dffb2e517fe2)
 
-
 **Purpose**
-
-Sellora is the ultimate app designed to streamline buying and selling on small islands where traditional online purchases can take a long time to arrive. With Sellora, you can easily connect with your local community and access a marketplace that's fast, efficient, and tailored to your needs.
-
-
+A replacement of facebook marketplace
 
 
 **Features:**
